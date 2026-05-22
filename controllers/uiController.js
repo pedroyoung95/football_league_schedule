@@ -70,13 +70,6 @@
   function eventMatchesCurrentScope(event) {
     const selectedTeamIds = getSelectedTeamIds();
     const selectedTeamSet = new Set(selectedTeamIds);
-    const leagueMatches = state.selectedLeagueIds.includes(event.leagueId);
-    if (!leagueMatches) {
-      return false;
-    }
-    if (state.selectedTeamId === "all" && !state.showFavoritesOnly) {
-      return true;
-    }
     return selectedTeamSet.has(event.homeTeamId) || selectedTeamSet.has(event.awayTeamId);
   }
 
@@ -330,7 +323,7 @@
       card.className = "match-card";
       title.textContent = `${event.homeTeam} vs ${event.awayTeam}`;
       meta.className = "match-meta";
-      meta.textContent = `${event.time || "시간 미정"} · ${event.leagueName || "리그 정보 없음"}`;
+      meta.textContent = `${event.time || "시간 미정"} · ${event.competitionName || event.leagueName || "대회 정보 없음"}`;
       detail.className = "memo";
       detail.textContent = `${event.venue || "경기장 정보 없음"} · 출처: ${event.source}`;
 
@@ -359,7 +352,7 @@
       window.scheduleService.saveFavoriteTeamIds(state.favoriteTeamIds);
       moveToNearestEventDate();
       state.statusText = "";
-      setStatus(`${data.source}에서 선택 월 기준 데이터를 가져왔습니다.`);
+      setStatus(`${data.source}에서 선택 리그 소속 팀들의 리그/컵/유럽대항전/친선경기 일정을 가져왔습니다.`);
       render();
     } catch (error) {
       setStatus("데이터를 가져오지 못했습니다. 네트워크 또는 공개 API 응답을 확인하세요.");
@@ -373,9 +366,9 @@
   async function loadVisibleMonthEvents() {
     try {
       setStatus("선택한 월의 인터넷 일정을 가져오는 중입니다.");
-      state.events = await window.scheduleService.loadMonthEvents(state.selectedLeagueIds, state.visibleDate);
+      state.events = await window.scheduleService.loadMonthEvents(state.selectedLeagueIds, state.visibleDate, state.teams);
       selectFirstEventInVisibleMonth();
-      setStatus("ESPN에서 선택 월 기준 데이터를 가져왔습니다.");
+      setStatus("ESPN에서 선택 월의 팀별 전체 대회 일정을 가져왔습니다.");
       render();
     } catch (error) {
       setStatus("선택한 월의 경기 일정을 가져오지 못했습니다.");
