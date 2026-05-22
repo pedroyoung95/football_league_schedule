@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>유럽 축구 일정 달력</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="topbar" aria-label="앱 상단">
+      <div>
+        <p class="eyebrow">European Football Fixtures</p>
+        <h1>유럽 5대 리그 경기 일정</h1>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="refreshButton" type="button" title="인터넷 일정 새로고침" aria-label="인터넷 일정 새로고침">↻</button>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="sidebar" aria-label="리그와 팀 선택">
+        <div class="section-head">
+          <p class="eyebrow">Leagues</p>
+          <h2>리그 선택</h2>
+        </div>
+        <div id="leagueFilter" class="league-filter"></div>
+
+        <div class="toolbar-row">
+          <button class="segmented-button is-active" id="allTeamsButton" type="button">전체 팀</button>
+          <button class="segmented-button" id="favoritesOnlyButton" type="button">즐겨찾기</button>
+        </div>
+
+        <div class="field-group">
+          <label for="teamSearchInput">팀 검색</label>
+          <input id="teamSearchInput" type="search" placeholder="예: Arsenal, Real Madrid" autocomplete="off">
+        </div>
+
+        <div id="teamList" class="team-list" aria-label="팀 목록"></div>
+      </aside>
+
+      <section class="calendar-area" aria-label="경기 일정 달력">
+        <div class="calendar-toolbar">
+          <button class="icon-button" id="prevMonthButton" type="button" title="이전 달" aria-label="이전 달">‹</button>
+          <h2 id="calendarTitle"></h2>
+          <button class="icon-button" id="nextMonthButton" type="button" title="다음 달" aria-label="다음 달">›</button>
+        </div>
+
+        <div id="statusBanner" class="status-banner" role="status"></div>
+        <div class="summary-strip" id="summaryStrip"></div>
+
+        <div class="calendar" role="grid" aria-label="월간 경기 일정">
+          <div class="weekday">일</div>
+          <div class="weekday">월</div>
+          <div class="weekday">화</div>
+          <div class="weekday">수</div>
+          <div class="weekday">목</div>
+          <div class="weekday">금</div>
+          <div class="weekday">토</div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </section>
+
+      <aside class="match-panel" aria-label="선택 날짜 경기 목록">
+        <div class="match-panel-header">
+          <div>
+            <p class="eyebrow">Selected Day</p>
+            <h2 id="matchListTitle">경기 목록</h2>
+          </div>
+        </div>
+        <div id="matchList" class="match-list"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="repositories/favoriteRepository.js"></script>
+  <script src="repositories/footballApiRepository.js"></script>
+  <script src="services/scheduleService.js"></script>
+  <script src="controllers/uiController.js"></script>
+</body>
+</html>
