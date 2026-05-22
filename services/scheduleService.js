@@ -6,7 +6,8 @@
     { id: "esp.1", name: "esp.1", label: "라리가", country: "Spain", displayName: "Spanish La Liga" },
     { id: "ger.1", name: "ger.1", label: "분데스리가", country: "Germany", displayName: "German Bundesliga" },
     { id: "fra.1", name: "fra.1", label: "리그1", country: "France", displayName: "French Ligue 1" },
-    { id: "ita.1", name: "ita.1", label: "세리에A", country: "Italy", displayName: "Italian Serie A" }
+    { id: "ita.1", name: "ita.1", label: "세리에A", country: "Italy", displayName: "Italian Serie A" },
+    { id: "tur.1", name: "tur.1", label: "터키 쉬페르리그", country: "Turkey", displayName: "Turkish Super Lig" }
   ];
 
   function getLeagueLabel(leagueId) {
