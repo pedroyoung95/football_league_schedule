@@ -12,6 +12,12 @@
   --accent-soft: #dceee4;
   --blue-soft: #edf2ff;
   --blue: #2f4ca3;
+  --cup-soft: #fff1d6;
+  --cup: #a35305;
+  --europe-soft: #e8f0ff;
+  --europe: #264fc4;
+  --friendly-soft: #f2e9ff;
+  --friendly: #6b32a8;
   --warning: #b45309;
   --shadow: 0 18px 45px rgba(29, 43, 35, 0.12);
 }
@@ -132,6 +138,11 @@ img {
   padding: 8px 10px;
   font-size: 14px;
   font-weight: 700;
+}
+
+.league-toggle-all {
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .league-toggle input {
@@ -447,6 +458,26 @@ input:focus {
   white-space: nowrap;
 }
 
+.match-chip.is-league {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.match-chip.is-cup {
+  background: var(--cup-soft);
+  color: var(--cup);
+}
+
+.match-chip.is-europe {
+  background: var(--europe-soft);
+  color: var(--europe);
+}
+
+.match-chip.is-friendly {
+  background: var(--friendly-soft);
+  color: var(--friendly);
+}
+
 .match-panel-header {
   display: flex;
   align-items: center;
@@ -472,10 +503,53 @@ input:focus {
   background: #fff;
 }
 
+.match-card.is-league {
+  border-left: 4px solid var(--accent);
+}
+
+.match-card.is-cup {
+  border-left: 4px solid var(--cup);
+}
+
+.match-card.is-europe {
+  border-left: 4px solid var(--europe);
+}
+
+.match-card.is-friendly {
+  border-left: 4px solid var(--friendly);
+}
+
+.match-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.match-card-title {
+  min-width: 0;
+}
+
 .match-card strong {
   display: block;
   font-size: 16px;
   line-height: 1.35;
+}
+
+.result-badge {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #17201c;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 7px 9px;
+  white-space: nowrap;
+}
+
+.result-badge[hidden] {
+  display: none;
 }
 
 .match-meta {

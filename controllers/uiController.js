@@ -123,6 +123,19 @@
     }, {});
   }
 
+  function getEventTypeClass(event) {
+    if (event.eventType === "cup") {
+      return "is-cup";
+    }
+    if (event.eventType === "europe") {
+      return "is-europe";
+    }
+    if (event.eventType === "friendly") {
+      return "is-friendly";
+    }
+    return "is-league";
+  }
+
   function showToast(message) {
     elements.toast.textContent = message;
     elements.toast.classList.add("is-visible");
@@ -140,6 +153,21 @@
 
   function renderLeagues() {
     elements.leagueFilter.innerHTML = "";
+    const allLabel = document.createElement("label");
+    const allCheckbox = document.createElement("input");
+    const allText = document.createElement("span");
+    const allSelected = state.selectedLeagueIds.length === state.leagues.length;
+
+    allLabel.className = "league-toggle league-toggle-all";
+    allCheckbox.type = "checkbox";
+    allCheckbox.value = "__all_leagues";
+    allCheckbox.checked = allSelected;
+    allCheckbox.indeterminate = state.selectedLeagueIds.length > 0 && !allSelected;
+    allText.textContent = "전체 리그";
+
+    allLabel.append(allCheckbox, allText);
+    elements.leagueFilter.appendChild(allLabel);
+
     state.leagues.forEach(function (league) {
       const label = document.createElement("label");
       const checkbox = document.createElement("input");
@@ -288,7 +316,7 @@
       matchWrap.className = "day-matches";
       dayEvents.slice(0, 3).forEach(function (event) {
         const chip = document.createElement("span");
-        chip.className = "match-chip";
+        chip.className = `match-chip ${getEventTypeClass(event)}`;
         chip.textContent = `${event.time || "시간 미정"} ${event.homeTeam} vs ${event.awayTeam}`;
         chip.title = chip.textContent;
         matchWrap.appendChild(chip);
@@ -316,18 +344,28 @@
 
     selectedDateEvents.forEach(function (event) {
       const card = document.createElement("article");
+      const header = document.createElement("div");
+      const titleWrap = document.createElement("div");
       const title = document.createElement("strong");
+      const result = document.createElement("span");
       const meta = document.createElement("div");
       const detail = document.createElement("p");
 
-      card.className = "match-card";
+      card.className = `match-card ${getEventTypeClass(event)}`;
+      header.className = "match-card-header";
+      titleWrap.className = "match-card-title";
       title.textContent = `${event.homeTeam} vs ${event.awayTeam}`;
+      result.className = "result-badge";
+      result.textContent = event.isCompleted && event.score ? `${event.score} ${event.status || "FT"}` : "";
+      result.hidden = !result.textContent;
       meta.className = "match-meta";
       meta.textContent = `${event.time || "시간 미정"} · ${event.competitionName || event.leagueName || "대회 정보 없음"}`;
       detail.className = "memo";
       detail.textContent = `${event.venue || "경기장 정보 없음"} · 출처: ${event.source}`;
 
-      card.append(title, meta, detail);
+      titleWrap.append(title, meta);
+      header.append(titleWrap, result);
+      card.append(header, detail);
       elements.matchList.appendChild(card);
     });
   }
@@ -383,14 +421,20 @@
       if (!checkbox) {
         return;
       }
-      const checkedLeagueIds = Array.from(elements.leagueFilter.querySelectorAll("input:checked")).map(function (input) {
-        return input.value;
-      });
-      if (!checkedLeagueIds.length) {
-        checkbox.checked = true;
-        showToast("최소 한 개 리그는 선택해야 합니다.");
+      if (checkbox.value === "__all_leagues") {
+        state.selectedLeagueIds = checkbox.checked ? state.leagues.map(function (league) {
+          return league.id;
+        }) : [];
+        state.selectedTeamId = "all";
+        state.showFavoritesOnly = false;
+        await loadLeagueData();
         return;
       }
+      const checkedLeagueIds = Array.from(elements.leagueFilter.querySelectorAll("input:checked")).map(function (input) {
+        return input.value;
+      }).filter(function (value) {
+        return value !== "__all_leagues";
+      });
       state.selectedLeagueIds = checkedLeagueIds;
       state.selectedTeamId = "all";
       await loadLeagueData();

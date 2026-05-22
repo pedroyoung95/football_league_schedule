@@ -64,10 +64,10 @@
   ];
 
   const sharedCompetitions = [
-    { id: "uefa.champions", name: "uefa.champions", label: "UEFA 챔피언스리그" },
-    { id: "uefa.europa", name: "uefa.europa", label: "UEFA 유로파리그" },
-    { id: "uefa.europa.conf", name: "uefa.europa.conf", label: "UEFA 컨퍼런스리그" },
-    { id: "club.friendly", name: "club.friendly", label: "클럽 친선경기" }
+    { id: "uefa.champions", name: "uefa.champions", label: "UEFA 챔피언스리그", type: "europe" },
+    { id: "uefa.europa", name: "uefa.europa", label: "UEFA 유로파리그", type: "europe" },
+    { id: "uefa.europa.conf", name: "uefa.europa.conf", label: "UEFA 컨퍼런스리그", type: "europe" },
+    { id: "club.friendly", name: "club.friendly", label: "클럽 친선경기", type: "friendly" }
   ];
 
   function getLeagueLabel(leagueId) {
@@ -138,6 +138,8 @@
     const awayTeam = away.team || {};
     const homeEspnId = String(homeTeam.id || home.id || "");
     const awayEspnId = String(awayTeam.id || away.id || "");
+    const hasHomeScore = home.score !== undefined && home.score !== null && home.score !== "";
+    const hasAwayScore = away.score !== undefined && away.score !== null && away.score !== "";
 
     return {
       id: `${competition.id}:${apiEvent.id}`,
@@ -145,6 +147,7 @@
       time: formatLocalTime(apiEvent.date),
       competitionId: competition.id,
       competitionName: competition.label,
+      eventType: competition.type || "league",
       leagueId: competition.parentLeagueId || competition.id,
       leagueName: competition.parentLeagueLabel || competition.label,
       homeTeamId: teamIdByEspnId.get(homeEspnId) || `${competition.id}:${homeEspnId}`,
@@ -155,7 +158,8 @@
       awayTeam: awayTeam.displayName || awayTeam.name || "",
       venue: eventCompetition.venue?.fullName || apiEvent.venue?.displayName || "",
       status: status.shortDetail || status.description || "",
-      score: home.score && away.score ? `${home.score} - ${away.score}` : "",
+      isCompleted: Boolean(status.completed),
+      score: hasHomeScore && hasAwayScore ? `${home.score} - ${away.score}` : "",
       source: "ESPN"
     };
   }
@@ -190,6 +194,7 @@
           id: league.id,
           name: league.name,
           label: league.label,
+          type: "league",
           parentLeagueId: league.id,
           parentLeagueLabel: league.label
         }
@@ -198,6 +203,7 @@
           id: cupCompetition.id,
           name: cupCompetition.name,
           label: cupCompetition.label,
+          type: "cup",
           parentLeagueId: league.id,
           parentLeagueLabel: league.label
         };
@@ -212,6 +218,7 @@
         id: league.id,
         name: league.name,
         label: league.label,
+        type: "league",
         parentLeagueId: league.id,
         parentLeagueLabel: league.label
       };
