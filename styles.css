@@ -487,6 +487,14 @@ input:focus {
   border-bottom: 1px solid var(--line);
 }
 
+.match-panel-note {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .match-list {
   display: grid;
   gap: 10px;
