@@ -56,11 +56,11 @@
   }
 
   function getSelectedTeamIds() {
-    if (state.showFavoritesOnly) {
-      return state.favoriteTeamIds.slice();
-    }
     if (state.selectedTeamId !== "all") {
       return [state.selectedTeamId];
+    }
+    if (state.showFavoritesOnly) {
+      return state.favoriteTeamIds.slice();
     }
     return state.teams.map(function (team) {
       return team.id;
@@ -198,7 +198,7 @@
     elements.favoritesOnlyButton.classList.toggle("is-active", state.showFavoritesOnly);
 
     const allButton = document.createElement("button");
-    allButton.className = `team-row ${state.selectedTeamId === "all" && !state.showFavoritesOnly ? "is-selected" : ""}`;
+    allButton.className = `team-row ${state.selectedTeamId === "all" ? "is-selected" : ""}`;
     allButton.type = "button";
     allButton.dataset.teamId = "all";
     allButton.textContent = state.showFavoritesOnly ? "즐겨찾기 전체 일정" : "선택 리그 전체 일정";
@@ -222,7 +222,7 @@
       const favoriteButton = document.createElement("button");
       const isFavorite = state.favoriteTeamIds.includes(team.id);
 
-      row.className = `team-item ${state.selectedTeamId === team.id && !state.showFavoritesOnly ? "is-selected" : ""}`;
+      row.className = `team-item ${state.selectedTeamId === team.id ? "is-selected" : ""}`;
       teamButton.className = "team-button";
       teamButton.type = "button";
       teamButton.dataset.teamId = team.id;
@@ -464,7 +464,6 @@
         return;
       }
       state.selectedTeamId = teamButton.dataset.teamId;
-      state.showFavoritesOnly = false;
       render();
     } catch (error) {
       showToast(error.message);
